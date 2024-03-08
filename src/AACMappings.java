@@ -1,20 +1,37 @@
+import java.io.File;
+import java.util.Scanner;
 import structures.AssociativeArray;
 
 public class AACMappings {
-  String filename;
   AssociativeArray<String, AACCategory> catmap;
-  AACCategory wordmap;
   String currentCat;
 
   public AACMappings(String filename) {
-    this.filename = filename;
+    File mappings = new File(filename);
+    try {
+      Scanner fileReader = new Scanner(mappings);
+      while (fileReader.hasNextLine()) {
+        String start = fileReader.findInLine(">");
+        if (start.equals(null)) {
+          
+        }
+
+      }
+    } catch (Exception e) {
+
+    }
+    
     reset();
   }
 
   //Adds the mapping to the current category (or the default category if that is the current category)
   void add(String imageLoc, String text) {
     try {
-    catmap.get(this.currentCat).addItem(imageLoc, text);
+      if (isCategory(this.currentCat)) {
+        catmap.set(imageLoc, new AACCategory(text));
+      } else {
+        catmap.get(this.currentCat).addItem(imageLoc, text);
+      }
     } catch (Exception e) {
 
     }
@@ -37,6 +54,11 @@ public class AACMappings {
   //Given the image location selected, it determines the associated text with the image.
   String getText(String imageLoc) {
     try {
+      if (isCategory(this.currentCat)) {
+        String text = this.catmap.get(imageLoc).name;
+        this.currentCat = text;
+        return text;
+      } 
       return this.catmap.get(this.currentCat).getText(imageLoc);
     } catch (Exception e) {
       return "error";
@@ -58,6 +80,8 @@ public class AACMappings {
 
   //Writes the ACC mappings stored to a file.
   void writeToFile(String filename) {
+
+    File mappings = new File(filename);
     //stub
   }
 
