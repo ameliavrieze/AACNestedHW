@@ -1,42 +1,59 @@
+import structures.AssociativeArray;
+
 public class AACMappings {
   String filename;
+  AssociativeArray<String, AACCategory> catmap;
+  AACCategory wordmap;
+  String currentCat;
 
   public AACMappings(String filename) {
     this.filename = filename;
+    reset();
   }
 
   //Adds the mapping to the current category (or the default category if that is the current category)
   void add(String imageLoc, String text) {
-    //stub
+    try {
+    catmap.get(this.currentCat).addItem(imageLoc, text);
+    } catch (Exception e) {
+
+    }
   }
 
   //Gets the current category
   String getCurrentCategory() {
-    return "";
-    //stub
+    return this.currentCat;
   }
 
   //Provides an array of all the images in the current category
   String[] getImageLocs() {
-    return new String[0];
-    //stub
+    try {
+    return this.catmap.get(this.currentCat).getImages();
+    } catch (Exception e) {
+      return new String[] {"error"};
+    }
   }
 
   //Given the image location selected, it determines the associated text with the image.
   String getText(String imageLoc) {
-    return "";
-    //stub
+    try {
+      return this.catmap.get(this.currentCat).getText(imageLoc);
+    } catch (Exception e) {
+      return "error";
+    }
   }
 
   //Determines if the image represents a category or text to speak
-  boolean isCategory(java.lang.String imageLoc) {
+  boolean isCategory(String imageLoc) {
+    if (this.currentCat.equals("")) {
+      return true;
+    }
     return false;
-    //stub
   }	
 
   //Resets the current category of the AAC back to the default category
   void reset() {
-    //stub
+    this.currentCat = "";
   }
 
   //Writes the ACC mappings stored to a file.
