@@ -105,6 +105,18 @@ public class AACMappings {
     File mappings = new File(filename);
     try {
       PrintWriter pen = new PrintWriter(mappings);
+      String[] categories = this.catmap.getKeys();
+      String[] catimages = this.imagemap.getImages();
+      int i = 0;
+      for (String cat : categories) {
+        pen.println(catimages[i]);
+        String[] images = this.catmap.get(cat).getImages();
+        for (String image : images) {
+          pen.println(">" + image);
+        }
+        i++;
+      }
+
     } catch (Exception e) {
 
     }
