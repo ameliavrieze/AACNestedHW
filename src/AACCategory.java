@@ -1,3 +1,8 @@
+/**
+ * AACCategory: wrapper class for an AssociativeArray that holds image locations and text
+ * @author Amelia Vrieze
+ */
+
 import structures.AssociativeArray;
 
 public class AACCategory {
@@ -13,12 +18,12 @@ public class AACCategory {
     try {
     this.map.set(imageLoc, text);
     } catch (Exception e) {
-
+      System.err.println("addItem error");
     }
   } 	
 
   // Returns the name of the category
-  String 	getCategory() {
+  String getCategory() {
     return this.name;
   }	
 
