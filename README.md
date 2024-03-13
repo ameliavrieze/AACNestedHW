@@ -4,3 +4,5 @@ for those who may struggle to communicate verbally.
 Author: Amelia Vrieze
 Class: CSC-207 Spring 2024
 Acknowledgements: original AAC project by Catie Baker
+
+Note: I deleted the .DS_Store file but it still shows up on GitHub for some reason.
