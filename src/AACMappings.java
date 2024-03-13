@@ -9,32 +9,25 @@ import java.util.Scanner;
 import structures.AssociativeArray;
 
 public class AACMappings {
-  AssociativeArray<String, AACCategory> catmap = new AssociativeArray<String, AACCategory>(); //String = category name
-  AACCategory imagemap = new AACCategory("");
-  String currentCat;
+  AssociativeArray<String, AACCategory> catmap = new AssociativeArray<String, AACCategory>(); 
+  String currentCat; 
 
   public AACMappings(String filename) {
     File mappings = new File(filename);
     try {
       Scanner fileReader = new Scanner(mappings);
+      String next = fileReader.nextLine();
       while (fileReader.hasNextLine()) {
-        String next = fileReader.nextLine();
-        if (next.startsWith(">")) {
-          String imageLoc = next.substring(next.indexOf(">" + 1, next.indexOf(" ")));
+        String imageLoc = next.substring(0, next.indexOf(" "));
+        this.currentCat = imageLoc;
+        String name = next.substring(next.indexOf(" ") + 1);
+        this.catmap.set(imageLoc, new AACCategory(name));
+        next = fileReader.nextLine();
+        while (next.startsWith(">")) {
+          imageLoc = next.substring(next.indexOf(">") + 1, next.indexOf(" "));
           String text = next.substring(next.indexOf(" ") + 1);
-          String temp = next.substring(next.indexOf("/") + 1);
-          String category = temp.substring(0, temp.indexOf("/"));
-          try {
-            this.catmap.get(category).addItem(imageLoc, text);
-          } catch (Exception e) {
-            this.catmap.set(category, new AACCategory(category));
-            this.catmap.get(category).addItem(imageLoc, text);
-          }
-        } else {
-          String imageLoc = next.substring(0, next.indexOf(" "));
-          String text = next.substring(next.indexOf(" ") + 1);
-          this.catmap.set(text, new AACCategory(text));
-          this.imagemap.addItem(imageLoc, text);
+          this.catmap.get(this.currentCat).addItem(imageLoc, text);
+          next = fileReader.nextLine();
         }
       }
     } catch (Exception e) {}
@@ -45,8 +38,7 @@ public class AACMappings {
   void add(String imageLoc, String text) {
     try {
       if (isCategory(imageLoc)) {
-        this.catmap.set(text, new AACCategory(text));
-        this.imagemap.addItem(imageLoc, text);
+        this.catmap.set(imageLoc, new AACCategory(text));
       } else {
         catmap.get(this.currentCat).addItem(imageLoc, text);
       }
@@ -64,7 +56,7 @@ public class AACMappings {
   String[] getImageLocs() {
     try {
       if (this.currentCat.equals("")) {
-        return imagemap.getImages();
+        return this.catmap.getKeys();
       }
       return this.catmap.get(this.currentCat).getImages();
     } catch (Exception e) {
@@ -76,11 +68,11 @@ public class AACMappings {
   String getText(String imageLoc) {
     try {
       if (isCategory(this.currentCat)) {
-        String text = this.imagemap.getText(imageLoc);
-        this.currentCat = text;
+        String text = this.catmap.get(this.currentCat).getText(imageLoc);
         return text;
       } 
-      return this.catmap.get(this.currentCat).getText(imageLoc);
+      this.currentCat = imageLoc;
+      return this.catmap.get(imageLoc).getCategory();
     } catch (Exception e) {
       return "error";
     }
@@ -88,10 +80,12 @@ public class AACMappings {
 
   //Determines if the image represents a category or text to speak
   boolean isCategory(String imageLoc) {
-      if (imagemap.getText(imageLoc).equals("image not found")) {
+      try {
+        this.catmap.get(imageLoc);
+        return true;
+      } catch (Exception e) {
         return false;
       }
-      return true;
   }	
 
   //Resets the current category of the AAC back to the default category
@@ -106,22 +100,17 @@ public class AACMappings {
     try {
       PrintWriter pen = new PrintWriter(mappings);
       String[] categories = this.catmap.getKeys();
-      String[] catimages = this.imagemap.getImages();
       int i = 0;
       for (String cat : categories) {
-        pen.println(catimages[i]);
+        pen.println(categories[i]);
         String[] images = this.catmap.get(cat).getImages();
         for (String image : images) {
           pen.println(">" + image);
         }
         i++;
       }
-
-    } catch (Exception e) {
-
-    }
-    
-    //stub
+      pen.close();
+    } catch (Exception e) {}
   }
 
   
