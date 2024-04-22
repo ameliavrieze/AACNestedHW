@@ -30,6 +30,7 @@ public class AACMappings {
           next = fileReader.nextLine();
         }
       }
+      fileReader.close();
     } catch (Exception e) {}
     reset();
   }
@@ -37,7 +38,7 @@ public class AACMappings {
   //Adds the mapping to the current category (or the default category if that is the current category)
   void add(String imageLoc, String text) {
     try {
-      if (isCategory(imageLoc)) {
+      if (this.currentCat == "") {
         this.catmap.set(imageLoc, new AACCategory(text));
       } else {
         catmap.get(this.currentCat).addItem(imageLoc, text);

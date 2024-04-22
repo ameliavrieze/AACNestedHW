@@ -5,4 +5,4 @@ Author: Amelia Vrieze
 Class: CSC-207 Spring 2024
 Acknowledgements: original AAC project by Catie Baker
 
-Note: I deleted the .DS_Store file but it still shows up on GitHub for some reason.
+Change log: The reason why new images couldn't be added as a top level category was because the way I wrote isCategory() depended on the category existing in the first place, but add() also called isCategory() within itself. That is fixed now and I tested it and it can add images to top level categories now. 
